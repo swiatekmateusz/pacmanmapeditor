@@ -122,7 +122,7 @@ class Game {
         div.setAttribute('data-x', x)
         div.setAttribute('data-y', y)
         div.classList.add('spriteItem')
-        div.style.backgroundImage = 'url("/sprite.png")'
+        div.style.backgroundImage = 'url("./sprite.png")'
         div.style.backgroundPosition = `${-this.spriteX * x - x - 1}px ${-this.spriteY * y - y - 1}px`
         div.addEventListener('mouseover', function () {
           this.classList.add('target')
