@@ -44,7 +44,7 @@ class Game {
         bgi: div.style.backgroundImage,
         bgp: div.style.backgroundPosition
       })
-      div.style.backgroundImage = 'url("/sprite.png")'
+      div.style.backgroundImage = 'url("./sprite.png")'
       div.style.backgroundPosition = `${-this.spriteX * x - x - 2}px ${-this.spriteY * y - y - 2}px`
     })
     if (changes.length) this.undoMoves.push(changes)
