@@ -9,6 +9,7 @@ class Game {
     this.focusFields = []
     this.undoMoves = []
     this.redoMoves = []
+    this.help = []
     this.generate()
   }
 
@@ -67,6 +68,15 @@ class Game {
   }
 
   selectFields = (x1, y1, x2, y2, isCtrl, e) => {
+    this.help.forEach(field => {
+      const div = document.querySelector(`.map-side [data-x="${field.x}"][data-y="${field.y}"]`)
+      div.classList.remove('selected')
+    })
+    this.focusFields.forEach(field => {
+      const div = document.querySelector(`.map-side [data-x="${field.x}"][data-y="${field.y}"]`)
+      div.classList.add('selected')
+    })
+    this.help = []
     if (x1 > x2) {
       x1 = [x2, x2 = x1][0];
     }
@@ -96,9 +106,9 @@ class Game {
             div.classList.add('selected')
           }
         } else {
-          // console.log('push');
-          // this.focusFields.push({ x: fromX + x, y: fromY + y })
-          //div.classList.add('selected')
+          //console.log('push');
+          this.help.push({ x: fromX + x, y: fromY + y })
+          div.classList.add('selected')
         }
 
       }
@@ -181,10 +191,14 @@ class Game {
     const cut = document.querySelector('.cut')
     const undo = document.querySelector('.undo')
     const redo = document.querySelector('.redo')
+    const save = document.querySelector('.save')
+    const load = document.querySelector('#fileSelect')
     deleteE.addEventListener('click', this.delete)
     cut.addEventListener('click', this.cut)
     undo.addEventListener('click', this.undo)
     redo.addEventListener('click', this.redo)
+    save.addEventListener('click', this.save)
+    load.addEventListener('click', this.loadFromFile)
 
     const that = this
     function keyUpHandler(e) {
@@ -283,5 +297,46 @@ class Game {
       this.undoMoves.push(undoPack)
       this.redoMoves.pop()
     }
+  }
+
+  loadFromFile = () => {
+    const fileElem = document.querySelector('#fileElem')
+    fileElem.addEventListener('change', e => {
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0], "UTF-8")
+      reader.onload = e => {
+        const result = JSON.parse(e.target.result)
+        result.forEach(item => {
+          const div = document.querySelector(`.map-side [data-x="${item.x}"][data-y="${item.y}"]`)
+          div.style.backgroundPosition = item.position
+          if (item.position) {
+            div.style.backgroundImage = "url('./sprite.png')"
+          }
+        })
+      }
+    })
+    if (fileElem) {
+      fileElem.click();
+    }
+  }
+  save = () => {
+    const toSave = []
+    document.querySelectorAll('.mapItem').forEach(item => {
+      const pack = {
+        x: item.dataset.x,
+        y: item.dataset.y,
+        position: item.style.backgroundPosition
+      }
+      toSave.push(pack)
+    })
+    console.log(JSON.stringify(toSave));
+    function download(content, fileName, contentType) {
+      var a = document.createElement("a");
+      var file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file);
+      a.download = fileName;
+      a.click();
+    }
+    download(JSON.stringify(toSave), 'map.json', 'application/json');
   }
 }
