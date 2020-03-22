@@ -166,6 +166,10 @@ class Game {
     }
 
     mapSide.addEventListener('mousedown', e => {
+      const box = document.querySelector('.box')
+      let { pageX, pageY } = e
+      box.style.top = pageY + "px"
+      box.style.left = pageX + "px"
       e.preventDefault()
       if (e.which === 1) {
         //console.log(e.ctrlKey);
@@ -174,11 +178,44 @@ class Game {
         const onMouseup = (e) => {
           const { x: x2, y: y2 } = e.target.dataset
           this.selectFields(x1, y1, x2, y2, e.ctrlKey, 'mouseup')
-
+          box.style.height = "0px"
+          box.style.width = "0px"
           mapSide.removeEventListener('mouseup', onMouseup)
           mapSide.removeEventListener('mousemove', onMousemove)
         }
         const onMousemove = (e) => {
+          let endX = e.pageX
+          let endY = e.pageY
+          // if (pageX > endX) {
+          //   pageX = [endX, endX = pageX][0];
+          // }
+          // if (pageY > endY) {
+          //   pageY = [endY, endY = pageY][0];
+          // }
+          if (endY - pageY < 0 && endX - pageX < 0) {
+            box.style.top = endY + "px"
+            box.style.left = endX + "px"
+            box.style.height = Math.abs(endY - pageY) + "px"
+            box.style.width = Math.abs(endX - pageX) + "px"
+          } else if (endY - pageY < 0) {
+            box.style.top = endY + "px"
+            box.style.left = pageX + "px"
+            box.style.height = Math.abs(endY - pageY) + "px"
+            box.style.width = Math.abs(endX - pageX) + "px"
+          } else if (endX - pageX < 0) {
+            box.style.top = pageY + "px"
+            box.style.left = endX + "px"
+            box.style.height = Math.abs(endY - pageY) + "px"
+            box.style.width = Math.abs(endX - pageX) + "px"
+          } else {
+            box.style.top = pageY + "px"
+            box.style.left = pageX + "px"
+            box.style.height = endY - pageY + "px"
+            box.style.width = endX - pageX + "px"
+          }
+          box.style.height = endY - pageY + "px"
+          box.style.width = endX - pageX + "px"
+          console.log(endY - pageY, pageY, endY)
           const { x: x2, y: y2 } = e.target.dataset
           this.selectFields(x1, y1, x2, y2, e.ctrlKey)
         }
