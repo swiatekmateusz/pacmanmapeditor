@@ -50,13 +50,14 @@ class Game {
     if (automat) {
       let x = 0
       let y = maxY
-      if (maxX + 1 !== this.x) {
+      if (maxX + 1 !== this.x + 10) {
         x = maxX + 1
       } else {
-        x = 0
-        y = y + 1 === this.y ? y : y + 1
+        x = 10
+        y = y + 1 === this.y + 10 ? y : y + 1
       }
       const div = document.querySelector(`.map-side [data-x="${x}"][data-y="${y}"]`)
+      console.log(x, y)
       this.focusFields.push({ x, y })
       div.classList.add('selected')
     }
