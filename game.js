@@ -225,10 +225,10 @@ class Game {
         letter = (String.fromCharCode(e.keyCode) || '').toLowerCase();
 
       if (e.ctrlKey && 's' === letter) {
-        alert("Save to file");
+        that.save()
       }
       if (e.ctrlKey && 'l' === letter) {
-        alert("Load from file");
+        that.loadFromFile()
       }
       if (e.ctrlKey && 'v' === letter) {
         alert("Paste");
