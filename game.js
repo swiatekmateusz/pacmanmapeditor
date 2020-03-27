@@ -21,7 +21,8 @@ class Game {
   }
 
   fillFields = (x, y) => {
-    const automat = document.querySelector('input').checked
+    const automat = document.querySelector('input[type=checkbox]').checked
+    console.log(automat)
     let maxX = 0
     let maxY = 0
     const X = []
