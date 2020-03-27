@@ -1,5 +1,5 @@
 class Game {
-  constructor(mapWidth = 8, mapHeight = 10) {
+  constructor(mapWidth = 25, mapHeight = 25) {
     this.x = mapWidth
     this.y = mapHeight
     this.spriteX = 35
@@ -17,10 +17,6 @@ class Game {
     this.focusFields = []
     document.querySelectorAll('.selected').forEach(field => {
       field.classList.remove('selected')
-      //const index = this.focusFields.findIndex(field2 => field2.x === field.x && field2.y === field.y)
-      // console.log(index);
-      // console.log(this.focusFields);
-      //this.focusFields.splice(index, 1)
     })
   }
 
@@ -49,8 +45,6 @@ class Game {
       div.style.backgroundPosition = `${-this.spriteX * x - x - 2}px ${-this.spriteY * y - y - 2}px`
     })
     if (changes.length) this.undoMoves.push(changes)
-
-    console.log(this.undoMoves);
     this.clearFields()
     if (automat) {
       let x = 0
@@ -88,25 +82,19 @@ class Game {
     const howManyY = Math.abs(y1 - y2)
     const fromX = parseInt(x1)
     const fromY = parseInt(y1)
-    //console.log(howManyX, howManyY);
     for (let y = 0; y <= howManyY; y++) {
       for (let x = 0; x <= howManyX; x++) {
-        //console.log(fromX + x, fromY + y);
         const div = document.querySelector(`.map-side [data-x="${fromX + x}"][data-y="${fromY + y}"]`)
         if (e === "mouseup") {
           if (isCtrl && div.classList.contains('selected')) {
             div.classList.remove('selected')
             const index = this.focusFields.findIndex(field => field.x === fromX + x && field.y === fromY + y)
-            // console.log(index);
-            // console.log(this.focusFields);
             this.focusFields.splice(index, 1)
           } else {
-            //console.log('push');
             this.focusFields.push({ x: fromX + x, y: fromY + y })
             div.classList.add('selected')
           }
         } else {
-          //console.log('push');
           this.help.push({ x: fromX + x, y: fromY + y })
           div.classList.add('selected')
         }
@@ -148,12 +136,12 @@ class Game {
       }
     }
     const mapSide = document.querySelector('.map-side')
-    mapSide.style.width = `${41 * this.x}px`
+    mapSide.style.width = `${37 * this.x}px`
     for (let y = 0; y < this.y; y++) {
       for (let x = 0; x < this.x; x++) {
         const div = document.createElement('div')
-        div.setAttribute('data-x', x)
-        div.setAttribute('data-y', y)
+        div.setAttribute('data-x', x + 10)
+        div.setAttribute('data-y', y + 10)
         div.classList.add('mapItem')
         div.addEventListener('mouseover', function () {
           this.classList.add('target')
@@ -172,9 +160,7 @@ class Game {
       box.style.left = pageX + "px"
       e.preventDefault()
       if (e.which === 1) {
-        //console.log(e.ctrlKey);
         const { x: x1, y: y1 } = e.target.dataset
-        //console.log('start');
         const onMouseup = (e) => {
           const { x: x2, y: y2 } = e.target.dataset
           this.selectFields(x1, y1, x2, y2, e.ctrlKey, 'mouseup')
@@ -186,12 +172,6 @@ class Game {
         const onMousemove = (e) => {
           let endX = e.pageX
           let endY = e.pageY
-          // if (pageX > endX) {
-          //   pageX = [endX, endX = pageX][0];
-          // }
-          // if (pageY > endY) {
-          //   pageY = [endY, endY = pageY][0];
-          // }
           if (endY - pageY < 0 && endX - pageX < 0) {
             box.style.top = endY + "px"
             box.style.left = endX + "px"
@@ -213,9 +193,6 @@ class Game {
             box.style.height = endY - pageY + "px"
             box.style.width = endX - pageX + "px"
           }
-          box.style.height = endY - pageY + "px"
-          box.style.width = endX - pageX + "px"
-          console.log(endY - pageY, pageY, endY)
           const { x: x2, y: y2 } = e.target.dataset
           this.selectFields(x1, y1, x2, y2, e.ctrlKey)
         }
@@ -296,7 +273,6 @@ class Game {
   }
 
   undo = () => {
-    console.log(this.undoMoves[this.undoMoves.length - 1]);
     const redoPack = []
     if (this.undoMoves[this.undoMoves.length - 1]) {
       this.undoMoves[this.undoMoves.length - 1].forEach(move => {
@@ -312,12 +288,10 @@ class Game {
       })
       this.redoMoves.push(redoPack)
       this.undoMoves.pop()
-      console.log(this.redoMoves);
     }
   }
 
   redo = () => {
-    console.log(this.redoMoves[this.redoMoves.length - 1]);
     const undoPack = []
     if (this.redoMoves[this.redoMoves.length - 1]) {
       this.redoMoves[this.redoMoves.length - 1].forEach(move => {
@@ -366,7 +340,6 @@ class Game {
       }
       toSave.push(pack)
     })
-    console.log(JSON.stringify(toSave));
     function download(content, fileName, contentType) {
       var a = document.createElement("a");
       var file = new Blob([content], { type: contentType });
