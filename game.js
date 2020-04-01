@@ -22,7 +22,6 @@ class Game {
 
   fillFields = (x, y) => {
     const automat = document.querySelector('input[type=checkbox]').checked
-    console.log(automat)
     let maxX = 0
     let maxY = 0
     const X = []
@@ -57,7 +56,6 @@ class Game {
         y = y + 1 === this.y + 10 ? y : y + 1
       }
       const div = document.querySelector(`.map-side [data-x="${x}"][data-y="${y}"]`)
-      console.log(x, y)
       this.focusFields.push({ x, y })
       div.classList.add('selected')
     }
