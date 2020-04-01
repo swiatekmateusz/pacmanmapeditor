@@ -170,6 +170,7 @@ class Game {
           mapSide.removeEventListener('mousemove', onMousemove)
         }
         const onMousemove = (e) => {
+
           let endX = e.pageX
           let endY = e.pageY
           if (endY - pageY < 0 && endX - pageX < 0) {
@@ -196,6 +197,7 @@ class Game {
           const { x: x2, y: y2 } = e.target.dataset
           this.selectFields(x1, y1, x2, y2, e.ctrlKey)
         }
+        //box.style.zIndex = 1
         mapSide.addEventListener('mousemove', onMousemove)
         mapSide.addEventListener('mouseup', onMouseup)
       }
